@@ -1,22 +1,25 @@
 package contas
 
+import "OrientedGobjects/model"
+
 //ContaCorrente é a conta corrente
 type ContaCorrente struct {
-	Titular string
-	Agencia int
-	Conta   int
-	Saldo   float64
+	Titular model.Titular `json:"titular"`
+	Agencia int           `json:"agencia"`
+	Conta   int           `json:"conta"`
+	saldo   float64       `json:"saldo"`
 }
 
+// Sacar = Withdraw
 func (c *ContaCorrente) Sacar(saque float64) string {
 
-	podeSacar := c.Saldo > saque
+	podeSacar := c.saldo > saque
 
 	naoNegativo := saque > 0
 
 	if podeSacar && naoNegativo {
 
-		c.Saldo -= saque
+		c.saldo -= saque
 
 		return "Saque realizado com sucesso"
 
@@ -26,15 +29,17 @@ func (c *ContaCorrente) Sacar(saque float64) string {
 	}
 }
 
+// Depositar = Deposit
 func (c *ContaCorrente) Depositar(deposito float64) string {
 
 	naoNegativo := deposito > 0
 
 	if naoNegativo {
 
-		c.Saldo += deposito
+		c.saldo += deposito
 
 		return "Deposito realizado com sucesso"
+
 	} else {
 
 		return "Por algum motivo não foi possível realizar o depósito"
@@ -42,16 +47,22 @@ func (c *ContaCorrente) Depositar(deposito float64) string {
 
 }
 
+// Transferencia = transfer
 func (c *ContaCorrente) Transferencia(valor float64, conta *ContaCorrente) string {
 
-	if c.Saldo > valor && valor > 0 {
+	if c.saldo > valor && valor > 0 {
 
-		c.Saldo -= valor
-		conta.Saldo += valor
+		c.saldo -= valor
+		conta.saldo += valor
 		return "O valor foi depositado com sucesso"
 	} else {
 
 		return "O deposito não foi possível"
 	}
 
+}
+
+// ObterSaldo Check how much money you have
+func (c *ContaCorrente) ObterSaldo() float64 {
+	return c.saldo
 }
